@@ -53,7 +53,7 @@ module.exports.routes = {
       headers: 'content-type,X-Requested-With'
     }
   },
-    '/stations/allClass':{
+    '/stations/class':{
     controller : 'StationsController',
     action : 'getAllClassStations',
     cors: {
@@ -62,25 +62,25 @@ module.exports.routes = {
       headers: 'content-type,X-Requested-With'
     }
   },
-    '/stations/byState':{
+    '/stations/wim':{
     controller : 'StationsController',
-    action : 'getAllStations',
+    action : 'getAllWimStations',
     cors: {
       origin: '*',
       methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
       headers: 'content-type,X-Requested-With'
     }
   },
-  '/stations/byState/:stateFips':{
+  '/stations/wim/:stateFips':{
     controller : 'StationsController',
-    action : 'getStateStations',
+    action : 'getStateWimStations',
     cors: {
       origin: '*',
       methods: 'GET, POST, PUT, DELETE, OPTIONS, HEAD',
       headers: 'content-type,X-Requested-With'
     }
   },
-  '/stations/byState/class/:stateFips':{
+  '/stations/class/:stateFips':{
     controller : 'StationsController',
     action : 'getStateClassStations',
     cors: {

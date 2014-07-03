@@ -71,11 +71,14 @@ module.exports = {
 			res.send(stationsCollection);
 		});
  	},
- 	getAllStations:function(req,res){
+ 	getAllWimStations:function(req,res){
  		var database = req.param('database');
+ 		console.time('total-AllWim');
 
+ 		//console.time('auth-AllWim');
  		googleapis.discover('bigquery', 'v2').execute(function(err, client) {
 	    	if (err) console.log(err);
+		    //console.timeEnd('auth-AllWim');
 		    var request = client.bigquery.jobs.query({
 		    	kind: "bigquery#queryRequest",
 		    	projectId: 'avail-wim',
@@ -91,18 +94,27 @@ module.exports = {
 		    request.body = {};
 		    request.body.query = sql;
 		    request.body.projectId = 'avail-wim';
+		    //console.time('query-AllWim');
 	      	request.withAuthClient(jwt)
 	        	.execute(function(err, response) {
 	          		if (err) console.log(err);
+	          		//console.timeEnd('query-AllWim');
+	          		//console.time('send-AllWim');
 	          		res.json(response);
+	          		//console.timeEnd('send-AllWim');
+	          		console.timeEnd('total-AllWim');
 	        	});
 		});
  	},
  	getAllClassStations: function(req,res){
  		var database = req.param('database')+'Class';
 
+ 		console.time('total-AllClass');
+
+ 		//console.time('auth-AllClass');
  		googleapis.discover('bigquery', 'v2').execute(function(err, client) {
 	    	if (err) console.log(err);
+	    	//console.timeEnd('auth-AllClass')
 		    var request = client.bigquery.jobs.query({
 		    	kind: "bigquery#queryRequest",
 		    	projectId: 'avail-wim',
@@ -118,24 +130,33 @@ module.exports = {
 		    request.body = {};
 		    request.body.query = sql;
 		    request.body.projectId = 'avail-wim';
+	      	//console.time('query-AllClass')
 	      	request.withAuthClient(jwt)
 	        	.execute(function(err, response) {
 	          		if (err) console.log(err);
+	          		//console.timeEnd('query-AllClass');
+	          		///console.time('send-AllClass');
 	          		res.json(response);
+	          		//console.timeEnd('send-AllClass');
+	          		console.timeEnd('total-AllClass');
 	        	});
 		});
  	},
 
- 	getStateStations: function(req,res) {
+ 	getStateWimStations: function(req,res) {
  		if(typeof req.param('stateFips') == 'undefined'){
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
+ 		console.time('total-wimState');
  		var state_fips = req.param('stateFips'),
  			database = req.param('database');
 
+ 		//console.time('auth-wimState');
  		googleapis.discover('bigquery', 'v2').execute(function(err, client) {
 	    	if (err) console.log(err);
+			//console.timeEnd('auth-wimState');
+ 		
 		    var request = client.bigquery.jobs.query({
 		    	kind: "bigquery#queryRequest",
 		    	projectId: 'avail-wim',
@@ -159,10 +180,15 @@ module.exports = {
 		    request.body = {};
 		    request.body.query = sql;
 		    request.body.projectId = 'avail-wim';
+		    //console.time('query-wimState');
 	      	request.withAuthClient(jwt)
 	        	.execute(function(err, response) {
 	          		if (err) console.log(err);
+	          		//console.timeEnd('query-wimState');
+	          		//console.time('send-wimState');
 	          		res.json(response);
+	          		//console.timeEnd('send-wimState');
+	          		console.timeEnd('total-wimState');
 	        	});
 		});
  	},
@@ -171,11 +197,14 @@ module.exports = {
  			res.send('{status:"error",message:"state FIPS required"}',500);
  			return;
  		}
+ 		console.time('total-classState');
  		var state_fips = req.param('stateFips'),
  			database = req.param('database')+'Class';
 
+ 		//console.time('auth-classState');
  		googleapis.discover('bigquery', 'v2').execute(function(err, client) {
 	    	if (err) console.log(err);
+		    //console.timeEnd('auth-classState');
 		    var request = client.bigquery.jobs.query({
 		    	kind: "bigquery#queryRequest",
 		    	projectId: 'avail-wim',
@@ -192,10 +221,15 @@ module.exports = {
 		    request.body = {};
 		    request.body.query = sql;
 		    request.body.projectId = 'avail-wim';
+		    //console.time('query-classState');
 	      	request.withAuthClient(jwt)
 	        	.execute(function(err, response) {
-	          		if (err) console.log(err);
+	        		if (err) console.log(err);
+	          		//console.timeEnd('query-classState');
+	          		//console.time('send-classState');
 	          		res.json(response);
+	          		//console.timeEnd('send-classState');
+	          		console.timeEnd('total-classState');
 	        	});
 		});
  	},
@@ -269,10 +303,10 @@ module.exports = {
 				    				lng = lng.replace(/^(\d\d)/, '-$1.');
 				    			}
 
-				    			feature.geometry.coordinates[0] = lng;
+				    			feature.geometry.coordinates[0] = lng*1;
 				    		} else if (name == 'latitude') {
 				    			var lat = (+d.f[i].v).toString().replace(/^ ?(\d\d)/, '$1.');
-				    			feature.geometry.coordinates[1] = lat;
+				    			feature.geometry.coordinates[1] = lat*1;
 				    		}
 			    		})
 			    		featureCollection.features.push(feature);
@@ -404,6 +438,7 @@ module.exports = {
  		}
 	},
  	getTrucks:function(req,res){
+ 		console.log('cal get trucks', req.param('database'));
  		var station_id = req.param('stationId'),
  			database = req.param('database');
  		//console.time('auth');
